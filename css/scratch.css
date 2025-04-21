@@ -1,0 +1,65 @@
+body { font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    color: rgb(56, 53, 53);
+    background-color: rgb(255, 255, 255);
+    }
+.bold {font-weight: bold;}    
+.normal {font-weight: normal;
+    font-style: normal;} /*so that we can override the default bold and italic*/
+.underline {text-decoration: underline;}
+.li {font-weight: normal;
+    font-size: 30px;
+    font-style: italic;
+    text-decoration: none}
+a:hover {text-decoration: underline;}
+a:visited {color: rgb(193, 12, 199);}
+body {
+    background-color: #ffffff;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+
+}
+/* Custom soccer heading style */
+.soccerlistheading {
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+}
+.common {
+    /* background-color: #cccccc; */
+    position: absolute;
+}
+.header{
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    height: 100px;
+    z-index: 2;
+    
+}
+
+.mainbody{
+    top: 114px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    padding-right: 5px;
+}
+
+.footer{
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    height: 25px;
+    font-size: 8px;
+    color: white;
+    text-align: center;
+    padding-top: 15px; 
+    position: absolute;   
+}
+.subheader {
+    float: right;
+}
+.center {
+    text-align: center;
+}
+ol {list-style-position: inside;}

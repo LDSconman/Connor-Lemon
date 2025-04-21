@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blackjack Game</title>
+  <link rel="stylesheet" href="css/scratch.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e2a47;
+      color: white;
+      text-align: center;
+    }
+
+    .game-container {
+      max-width: 800px;
+      margin: 50px auto;
+    }
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    .hand {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      margin: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    button:disabled {
+      background-color: gray;
+    }
+
+    #controls {
+      margin-top: 30px;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Blackjack Game</h1>
+    <div id="player-hand">
+      <h2>Your Hand</h2>
+      <div class="hand" id="player-cards"></div>
+      <div id="player-score"></div>
+    </div>
+    <div id="dealer-hand">
+      <h2>Dealer's Hand</h2>
+      <div class="hand" id="dealer-cards"></div>
+      <div id="dealer-score"></div>
+    </div>
+    <div id="controls">
+      <button id="deal-button">Deal</button>
+      <button id="hit-button" disabled>Hit</button>
+      <button id="stand-button" disabled>Stand</button>
+    </div>
+    <div id="result"></div>
+  </div>
+  <script>
+    // Define card deck
+    const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
+    const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+
+    let deck = [];
+    let playerHand = [];
+    let dealerHand = [];
+    let playerScore = 0;
+    let dealerScore = 0;
+
+    function createDeck() {
+      deck = [];
+      for (let suit of suits) {
+        for (let value of values) {
+          deck.push({ value, suit });
+        }
+      }
+    }
+
+    function shuffleDeck() {
+      for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];  // Swap elements
+      }
+    }
+
+    function cardValue(card) {
+      if (card.value === 'A') return 11;
+      if (['K', 'Q', 'J'].includes(card.value)) return 10;
+      return parseInt(card.value);
+    }
+
+    function updateScores() {
+      playerScore = playerHand.reduce((total, card) => total + cardValue(card), 0);
+      dealerScore = dealerHand.reduce((total, card) => total + cardValue(card), 0);
+      document.getElementById('player-score').textContent = `Score: ${playerScore}`;
+      document.getElementById('dealer-score').textContent = `Score: ${dealerScore}`;
+    }
+
+    function displayHands() {
+      const playerCardsDiv = document.getElementById('player-cards');
+      const dealerCardsDiv = document.getElementById('dealer-cards');
+      
+      playerCardsDiv.innerHTML = '';
+      dealerCardsDiv.innerHTML = '';
+      
+      playerHand.forEach(card => {
+        playerCardsDiv.innerHTML += `<div>${card.value} of ${card.suit}</div>`;
+      });
+      dealerHand.forEach(card => {
+        dealerCardsDiv.innerHTML += `<div>${card.value} of ${card.suit}</div>`;
+      });
+    }
+
+    function checkForWinner() {
+      if (playerScore > 21) {
+        document.getElementById('result').textContent = 'You busted! Dealer wins!';
+        disableButtons();
+      } else if (dealerScore > 21) {
+        document.getElementById('result').textContent = 'Dealer busted! You win!';
+        disableButtons();
+      } else if (playerScore === 21) {
+        document.getElementById('result').textContent = 'Blackjack! You win!';
+        disableButtons();
+      } else if (dealerScore === 21) {
+        document.getElementById('result').textContent = 'Dealer has Blackjack! You lose!';
+        disableButtons();
+      }
+    }
+
+    function disableButtons() {
+      document.getElementById('hit-button').disabled = true;
+      document.getElementById('stand-button').disabled = true;
+    }
+
+    document.getElementById('deal-button').addEventListener('click', () => {
+      createDeck();
+      shuffleDeck();
+      playerHand = [deck.pop(), deck.pop()];
+      dealerHand = [deck.pop(), deck.pop()];
+      updateScores();
+      displayHands();
+      document.getElementById('hit-button').disabled = false;
+      document.getElementById('stand-button').disabled = false;
+      document.getElementById('result').textContent = '';
+    });
+
+    document.getElementById('hit-button').addEventListener('click', () => {
+      playerHand.push(deck.pop());
+      updateScores();
+      displayHands();
+      checkForWinner();
+    });
+
+    document.getElementById('stand-button').addEventListener('click', () => {
+      while (dealerScore < 17) {
+        dealerHand.push(deck.pop());
+        updateScores();
+        displayHands();
+      }
+      checkForWinner();
+    });
+  </script>
+  <a href="index.html" class="center">Back to Home</a>
+</body>
+</html>
